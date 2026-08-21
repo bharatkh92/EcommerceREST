@@ -9,7 +9,11 @@ passport.use(new GoogleStrategy({
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     callbackURL: process.env.GOOGLE_CALLBACK_URL
     }, async ( accessToken, refreshToken, profile, done ) => {
-        const checkExistingUser = `SELECT * FROM users u JOIN user_identities ui ON u.id = ui.user_id WHERE ui.provider_name = 'google' AND ui.provider_account_id = $1`;
+        const checkExistingUser = `SELECT * FROM users
+                                    u JOIN user_identities ui
+                                    ON u.id = ui.user_id 
+                                    WHERE ui.provider_name = 'google' 
+                                    AND ui.provider_account_id = $1`;
         try {
             const doesUserExist = await query(checkExistingUser, [profile.id]);
             if (doesUserExist.rows.length > 0 ) {
@@ -22,14 +26,14 @@ passport.use(new GoogleStrategy({
                 await client.query('BEGIN');
                 // inserting into users table
                 const insertUserInUsersTable = `INSERT INTO users (name, email) 
-                    VALUES ($1, $2) RETURNING id, name, email`;
+                                                VALUES ($1, $2) RETURNING id, name, email`;
                 const email = profile.emails[0].value;
                 const newUserResult = await client.query(insertUserInUsersTable, [profile.displayName, email]);
                 const newUser = newUserResult.rows[0];
                 // inserting into user_identities table
                 const insertUserInIdentities = `INSERT INTO user_identities (user_id, provider_name, 
-                    provider_account_id, access_token, access_token_expires_at, refresh_token) VALUES (
-                    $1, 'google', $2, $3, CURRENT_TIMESTAMP + INTERVAL '1 hour', $4)`;
+                    provider_account_id, access_token, access_token_expires_at, refresh_token) 
+                    VALUES ($1, 'google', $2, $3, CURRENT_TIMESTAMP + INTERVAL '1 hour', $4)`;
                 await client.query(insertUserInIdentities, [newUser.id, profile.id, accessToken, refreshToken]);
 
                 await client.query('COMMIT');
@@ -43,9 +47,9 @@ passport.use(new GoogleStrategy({
                 client.release();
             }
 
-        } catch(err) {
-            console.error(`Error during checking existing user:`, err);
-            return done(err, null);
+        } catch(error) {
+            console.error(`Error during checking existing user:`, error);
+            return done(error, null);
         }
 
     }
@@ -56,7 +60,8 @@ passport.serializeUser((user, done) => {
 })
 
 passport.deserializeUser(async (id, done) => {
-    const getUserQuery = `SELECT id, name, email, role FROM users WHERE id = $1`;
+    const getUserQuery = `SELECT id, name, email, role 
+                            FROM users WHERE id = $1`;
     try {
         const result = await query(getUserQuery, [id]);
         if (result.rows.length > 0) {
@@ -64,8 +69,8 @@ passport.deserializeUser(async (id, done) => {
         } else {
             done(null, false);
         }
-    } catch(err) {
-        console.error(`Error during deserializeuser: `, err);
-        done(err, null);
+    } catch(error) {
+        console.error(`Error during deserializeuser: `, error);
+        done(error, null);
     }
 })
