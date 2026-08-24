@@ -7,11 +7,11 @@ import './config/passport.js';
 import cors from 'cors';
 import { query, pool} from './config/db.js';
 import { authRouter } from './routes/auth.js';
-import { productsRouter } from './routes/products.js';
-import { cartRouter } from './routes/cart.js';
-import { ordersRouter } from './routes/orders.js';
+import { productsRouter } from './routes/productsRouter.js';
+import { cartRouter } from './routes/cartRouter.js';
+import { ordersRouter } from './routes/ordersRouter.js';
 import { ensureAuthenticated } from './middleware/authMiddleware.js';
-import { profileRouter } from './routes/profiles.js';
+import { userRouter } from './routes/userRouter.js';
 
 const app = express();
 const port = 3000;
@@ -52,7 +52,7 @@ app.use('/auth', authRouter);
 app.use('/products', productsRouter);
 app.use('/cart', ensureAuthenticated, cartRouter);
 app.use('/orders', ensureAuthenticated, ordersRouter);
-app.use('/profile', ensureAuthenticated, profileRouter);
+app.use('/user', ensureAuthenticated, userRouter);
 
 app.get('/', async (req, res) => {
   // res.send('Hello World!');

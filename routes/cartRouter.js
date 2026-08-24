@@ -29,7 +29,7 @@ cartRouter.post('/', async(req, res, next) => {
 
         let results = await query(sql, [req.user.id, product_id, quantity]);
         if (results) {
-            return res.status(201).json(results.rows);
+            return res.status(201).json(results);
         }
     } catch(error) {
         error.message = 'Error while adding to the cart';
