@@ -20,7 +20,7 @@ productsRouter.get('/:productId', async (req, res, next) => {
     try {
         let sql = `SELECT * 
                     FROM products
-                    WHERE id = $1`;
+                    WHERE id = $1`; 
         let results = await query(sql, [req.params.productId]);
         if (results) {
             return res.status(200).json(results.rows);

@@ -5,8 +5,9 @@ export const authRouter = express.Router();
 
 authRouter.get('/google', passport.authenticate('google', { scope: ['profile', 'email']})); 
 
-authRouter.get('/google/callback', passport.authenticate('google', { failureRedirect: '/login' }), (req, res) => {
-    res.redirect('/');
+
+authRouter.get('/google/callback', passport.authenticate('google', { failureRedirect: 'http://localhost:5173/home' }), (req, res) => {
+    return res.redirect('http://localhost:5173/home');
 });
 
 authRouter.post('/logout', (req, res, next) => {
@@ -21,7 +22,7 @@ authRouter.post('/logout', (req, res, next) => {
         }
 
         res.clearCookie('connect.sid');
-        res.status(200).json({message: 'Successfully logged out'});
+        return res.status(200).json({message: 'Successfully logged out'});
     })
 
     })
