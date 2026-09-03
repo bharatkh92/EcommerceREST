@@ -19,7 +19,9 @@ ordersRouter.get('/', async(req, res, next) => {
 ordersRouter.get('/:orderId', async(req, res, next) => {
     try {
         let orderId = req.params.orderId;
-        let sql = `SELECT * FROM order_details
+        let sql = `SELECT * FROM order_details od
+                    JOIN products p
+                    ON p.id = od.product_id
                     WHERE order_id = $1`;
         let result = await query(sql, [orderId]);
         if (result) {

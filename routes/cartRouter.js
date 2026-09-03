@@ -5,7 +5,7 @@ export const cartRouter = express.Router();
 
 cartRouter.get('/', async(req, res, next) => {
     try {
-        let sql = `SELECT p.id, p.name, p.description, p.price, p.image, p.price, p.weight, c.quantity, c.created_at 
+        let sql = `SELECT c.product_id , p.name, p.description, p.price, p.image, p.price, p.weight, c.quantity, c.created_at 
                 FROM cart c 
                 JOIN products p 
                 ON c.product_id = p.id 
@@ -55,14 +55,30 @@ cartRouter.put('/', async(req, res, next) => {
     }
 })
 
-cartRouter.delete('/', async(req, res, next) => {
+cartRouter.delete('/:product_id', async(req, res, next) => {
     try {
-        const { product_id } = req.body;
+        const product_id = req.params.product_id;
         let sql = `DELETE FROM cart
                     WHERE user_id = $1
                     AND product_id = $2
                     RETURNING *`;
         let results = await query(sql, [req.user.id, product_id]);
+        if (results) {
+            return res.status(200).json(results.rows);
+        }
+
+    } catch(error) {
+        error.message = 'Error while deleting the cart';
+        next(error)
+    }
+})
+
+cartRouter.delete('/', async(req, res, next) => {
+    try {
+        let sql = `DELETE FROM cart
+                    WHERE user_id = $1
+                    RETURNING *`;
+        let results = await query(sql, [req.user.id]);
         if (results) {
             return res.status(200).json(results.rows);
         }
