@@ -56,6 +56,13 @@ userRouter.post("/addresses", async (req, res, next) => {
             postal_code,
             country,
         } = req.body;
+
+        if (!title.trim() || !address_line_1.trim() || !city.trim() || !state.trim() || !postal_code.trim() || !country.trim()) {
+            return res.status(400).json({
+                message: `missing address fields`
+            })
+        }
+        
         let addressSql = `
         INSERT INTO addresses(
             user_id,
@@ -99,6 +106,12 @@ userRouter.put("/addresses/:addressId", async (req, res, next) => {
             postal_code,
             country,
         } = req.body;
+        if (!title.trim() || !address_line_1.trim() || !city.trim() || !state.trim() || !postal_code.trim() || !country.trim()) {
+            return res.status(400).json({
+                message: `missing address fields`
+            })
+        }
+
         let addressSql = `
         UPDATE addresses 
         SET title = $1, 
