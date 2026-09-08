@@ -55,17 +55,14 @@ app.use('/orders', ensureAuthenticated, ordersRouter);
 app.use('/user', ensureAuthenticated, userRouter);
 
 app.get('/', async (req, res) => {
-  // res.send('Hello World!');
   let sql = "select 'dataabase is connected' as status";
   let result = await query(sql,[]);
   try {
     if (result) {
-      console.log(`user name is ${req.user.name} id is ${req.user.id} email is ${req.user.email} role is ${req.user.role}`);
-      res.status(200).json({result: result.rows[0].status, message: `user name is ${req.user.name} id is ${req.user.id} email is ${req.user.email} role is ${req.user.role}`});
+      res.status(200).json({ message: "hello"});
     }
 
   }catch(e) {
-    console.log('outside if');
     res.status(500).send('log in ')
   }
 });
