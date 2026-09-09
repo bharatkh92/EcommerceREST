@@ -22,7 +22,7 @@ app.set("trust proxy", 1);
 const PostgresqlStore = pgSession(session);
 
 app.use(cors({
-    origin: 'https://ecommerce-frontend-chi-vert.vercel.app/', 
+    origin: process.env.FRONTEND_URL, 
     credentials: true 
 }));
 
