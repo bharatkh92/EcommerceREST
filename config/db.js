@@ -8,7 +8,7 @@ export const pool = new Pool({
     port: process.env.DB_PORT,
     database: process.env.DB_NAME,
     ssl: {
-        rejectUnauthorized: false, // Mandatory for connecting to Neon
+        rejectUnauthorized: false,
     },
 });
 

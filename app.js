@@ -32,7 +32,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use(session({
     store: new PostgresqlStore({
         pool: pool, 
-        tableName: 'session' 
+        tableName: 'session',
+        schemaName: 'public',
     }),
     secret: process.env.SESSION_SECRET,
     resave: false,
